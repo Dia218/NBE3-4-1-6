@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <style>
+        body {
+            background: #ddd;
+        }
+
+        .card {
+            margin: auto;
+            max-width: 950px;
+            width: 90%;
+            box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            border-radius: 1rem;
+            border: transparent
+        }
+
+        .summary {
+            background-color: #ddd;
+            border-top-right-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            padding: 4vh;
+            color: rgb(65, 65, 65)
+        }
+
+        @media (max-width: 767px) {
+            .summary {
+                border-top-right-radius: unset;
+                border-bottom-left-radius: 1rem
+            }
+        }
+
+        .row {
+            margin: 0
+        }
+
+        .title b {
+            font-size: 1.5rem
+        }
+
+        .col-2,
+        .col {
+            padding: 0 1vh
+        }
+
+        img {
+            width: 3.5rem
+        }
+
+        hr {
+            margin-top: 1.25rem
+        }
+
+        .products {
+            width: 100%;
+        }
+
+        .products .price, .products .action {
+            line-height: 38px;
+        }
+
+        .products .action {
+            line-height: 38px;
+        }
+
+        .quantity {
+            width: 60px;
+        }
+
+        .order-button {
+            margin-top: -1rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-button a {
+            font-size: 1rem; /* 폰트 크기 조정 */
+            padding: 0.5rem 1rem; /* 패딩 조정 */
+            width: 110px; /* 버튼 너비 설정 */
+            text-align: center; /* 텍스트 가운데 정렬 */
+        }
+    </style>
+    <title>상품 목록</title>
+</head>
+<body class="container-fluid">
+<div class="row justify-content-center m-4">
+    <h1 class="text-center">상품 목록</h1>
+</div>
+
+<!-- 주문내역 버튼 추가 -->
+<div class="row justify-content-center order-button">
+    <a href="/orders/checkEmail" class="btn btn-primary btn-sm">주문 내역</a>
+</div>
+
+<div class="card">
+    <div class="row">
+        <!-- 상품 목록 -->
+        <div class="col-md-8 mt-4 d-flex flex-column align-items-start p-3 pt-0">
+            <h5 class="flex-grow-0"><b>상품 목록</b></h5>
+            <ul class="list-group products">
+                <li class="list-group-item d-flex mt-3" th:each="product : ${products}">
+                    <div class="col-2"><img class="img-fluid" th:src="${product.image}" alt=""></div>
+                    <div class="col">
+                        <div class="row text-muted" th:text="${product.name}"></div>
+                        <div class="row" th:text="${product.description}"></div>
+                    </div>
+                    <div class="col text-center price" th:text="${product.price} + '원'"></div>
+                    <div class="col text-end action">
+                        <button class="btn btn-small btn-outline-dark add-to-summary"
+                                th:data-id="${product.id}"
+                                th:data-name="${product.name}"
+                                th:data-price="${product.price}"
+                                th:data-stock="${product.stock}">추가
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Summary -->
+        <div class="col-md-4 summary p-4">
+            <h5><b>Summary</b></h5>
+            <hr>
+            <div id="summary-products">
+                <!-- 상품 목록 추가될 부분 -->
+            </div>
+            <form id="order-form" th:action="@{/products}" method="POST">
+                <div id="hidden-products">
+                    <!-- 상품 데이터가 hidden 필드로 추가될 부분 -->
+                </div>
+
+                <!-- 총 금액 hidden 필드 추가 -->
+                <input type="hidden" id="total-price-input" name="totalPrice">
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">이메일</label>
+                    <input type="email" class="form-control mb-1" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">주소</label>
+                    <input type="text" class="form-control mb-1" id="address" name="delivery.address" required>
+                </div>
+                <div class="mb-3">
+                    <label for="postcode" class="form-label">우편번호</label>
+                    <input type="text" class="form-control" id="postcode" name="delivery.postcode" required>
+                </div>
+
+                <div class="row pt-2 pb-2 border-top">
+                    <h5 class="col">총금액</h5>
+                    <h5 class="col text-end" id="total-price">0원</h5>
+                </div>
+
+
+                <button class="btn btn-dark col-12" type="submit">결제하기</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let summary = {};  // 상품을 관리할 객체
+        let index = 0;     // 인덱스를 관리할 변수
+
+        // 재고 정보를 stockInfo 객체에 추가 (Thymeleaf로 전달받은 값으로 설정)
+        const stockInfo = {};
+
+        // 제품 목록에 대해 재고 정보를 stockInfo 객체에 채운다.
+        $("button.add-to-summary").each(function() {
+            const productId = $(this).data("id");
+            const productStock = $(this).data("stock");
+            stockInfo[productId] = productStock;  // 재고 정보 저장
+        });
+
+        // 상품을 추가할 때
+        $(".add-to-summary").click(function () {
+            const id = $(this).data("id");
+            const name = $(this).data("name");
+            const price = $(this).data("price");
+
+            if (!summary[id]) {
+                summary[id] = {name, price, quantity: 1};
+            } else {
+                summary[id].quantity += 1;
+            }
+
+            updateSummary();
+        });
+
+        // Summary 업데이트
+        function updateSummary() {
+            $("#summary-products").empty();
+            $("#hidden-products").empty();
+            let total = 0;
+            let hiddenIndex = 0;  // hidden 필드 인덱스를 관리
+            let stockError = false; // 재고 부족 여부 체크
+
+            for (const [id, product] of Object.entries(summary)) {
+                const availableStock = stockInfo[id] || 0; // 해당 상품의 재고
+
+                if (product.quantity > availableStock) {
+                    stockError = true;  // 재고 부족 시 true
+                }
+
+                total += product.price * product.quantity;
+
+                const productRow = `
+                <div class="row" id="product-${id}">
+                    <div class="col-6">
+                        <h6 class="p-0">${product.name}</h6>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="quantity form-control" value="${product.quantity}" data-id="${id}" max="${availableStock}">
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-danger btn-sm remove-item" data-id="${id}">삭제</button>
+                    </div>
+                </div>
+            `;
+
+                const hiddenInput = `
+                <input type="hidden" name="orderDetails[${hiddenIndex}].product.id" value="${id}">
+                <input type="hidden" name="orderDetails[${hiddenIndex}].quantity" value="${product.quantity}">
+                <input type="hidden" name="orderDetails[${hiddenIndex}].price" value="${product.price}">
+            `;
+
+                $("#summary-products").append(productRow);
+                $("#hidden-products").append(hiddenInput);
+
+                hiddenIndex++; // 인덱스를 증가시켜서 다음 항목에 대해 고유한 인덱스를 설정
+            }
+
+            // 총 금액 업데이트
+            $("#total-price").text(total + '원');
+            $("#total-price-input").val(total);
+
+            // 재고 부족 메시지 표시
+            if (stockError) {
+                $("#stock-error-message").show();  // 재고 부족 메시지 표시
+            } else {
+                $("#stock-error-message").hide();  // 재고 부족 메시지 숨기기
+            }
+        }
+
+        // 수량 변경 (입력값 수정 시)
+        $("#summary-products").on("change", ".quantity", function () {
+            const id = $(this).data("id");
+            const quantity = parseInt($(this).val());
+            const availableStock = stockInfo[id] || 0; // 해당 상품의 재고
+
+            if (quantity > availableStock) {
+                alert(`재고가 부족합니다. 현재 재고량은 ${availableStock}개입니다.`);
+                $(this).val(availableStock);  // 수량을 재고량으로 조정
+            }
+
+            if (summary[id]) {
+                summary[id].quantity = parseInt($(this).val());
+            }
+
+            updateSummary();
+        });
+
+        // 삭제 버튼 클릭 시
+        $("#summary-products").on("click", ".remove-item", function () {
+            const id = $(this).data("id");
+            delete summary[id];
+            updateSummary();
+        });
+
+        // 폼 제출 전 상품이 담겼는지 확인하는 함수
+        $("#order-form").submit(function (e) {
+            if (Object.keys(summary).length === 0) {
+                e.preventDefault();  // 폼 제출을 막음
+                alert("상품을 담아주세요.");  // 경고 메시지
+            }
+
+            // 재고 부족 체크
+            for (const [id, product] of Object.entries(summary)) {
+                const availableStock = stockInfo[id] || 0;
+                if (product.quantity > availableStock) {
+                    e.preventDefault();  // 폼 제출을 막음
+                    alert(`상품 ${product.name}의 재고가 부족합니다. 현재 재고량은 ${availableStock}개입니다.`);
+                    return;  // 재고 부족 시 더 이상 진행하지 않음
+                }
+            }
+        });
+    });
+</script>
+
+</script>
+</body>
+</html>
