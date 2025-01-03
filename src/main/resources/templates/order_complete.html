@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>주문 페이지</title>
+</head>
+<body>
+<h1>주문이 완료되었습니다.</h1>
+
+<h3>주문 정보:</h3>
+<div>
+    <p><strong>이메일:</strong> <span th:text="${order.email}"></span></p>
+    <p><strong>주소:</strong> <span th:text="${order.delivery.address}"></span></p>
+    <p><strong>우편번호:</strong> <span th:text="${order.delivery.postcode}"></span></p>
+    <h4>주문 상품 목록:</h4>
+    <ul>
+        <li th:each="item : ${order.orderDetails}">
+            <span th:text="${item.product.name}">상품명</span> -
+            <span th:text="${item.quantity}">수량</span>개 -
+            <span th:text="${item.price}">가격</span>원
+        </li>
+    </ul>
+    <h4>총 금액: <span th:text="${order.totalPrice}">금액</span> 원</h4>
+</div>
+
+<a href="/products">상품 목록으로 돌아가기</a>
+
+</body>
+</html>
