@@ -74,6 +74,21 @@ public class SellerOrderControllerTest {
                 .andExpect(jsonPath("$[?(@.customerEmail == 'email3@email.com')]", hasSize(1))); // 해당 이메일 주문 개수 확인
     }
 
+    @Test
+    @DisplayName("잘못된 email 조회시 0개")
+    void getOrdersByWrongEmail() throws Exception {
+        List<Order> orders = createOrders();
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/admin/orders/search")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("email", "email99@email.com"))
+                .andDo(print());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0))); // 해당 이메일 주문 개수 확인
+    }
+
     // 테스트 데이터 5개
     public List<Order> createOrders() throws InterruptedException {
         for (int i = 1; i <= 5; i++) {
