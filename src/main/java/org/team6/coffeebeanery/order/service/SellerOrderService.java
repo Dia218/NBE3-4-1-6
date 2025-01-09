@@ -13,9 +13,14 @@ import java.util.List;
 public class SellerOrderService {
     private final OrderRepository orderRepository;
 
-    public List<Order> findAll() {
+    public List<Order> getOrders() {
         // 주문 일자 최신순으로 정렬
         Sort sort = Sort.by(Sort.Order.desc("orderCreatedAt"));
         return orderRepository.findAll(sort);
+    }
+
+    public List<Order> getOrdersByEmail(String email) {
+        Sort sort = Sort.by(Sort.Order.desc("orderCreatedAt"));
+        return orderRepository.findAllByCustomerEmail(email, sort);
     }
 }
