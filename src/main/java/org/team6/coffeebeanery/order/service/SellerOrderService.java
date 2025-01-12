@@ -10,8 +10,6 @@ import org.team6.coffeebeanery.order.dto.OrderResponseDto;
 import org.team6.coffeebeanery.order.model.Order;
 import org.team6.coffeebeanery.order.repository.OrderRepository;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
 public class SellerOrderService {
@@ -48,4 +46,7 @@ public class SellerOrderService {
                 .build();
     }
 
+    public long count() {
+        return orderRepository.count();
+    }
 }
