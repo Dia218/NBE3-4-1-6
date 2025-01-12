@@ -1,6 +1,7 @@
 package org.team6.coffeebeanery.order.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 import org.team6.coffeebeanery.common.constant.OrderStatus;
 import org.team6.coffeebeanery.common.model.Address;
 import org.team6.coffeebeanery.delivery.model.Delivery;
@@ -9,6 +10,7 @@ import org.team6.coffeebeanery.order.model.OrderDetail;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 @Builder
 public class OrderResponseDto {
     private Integer orderId; //주문 ID

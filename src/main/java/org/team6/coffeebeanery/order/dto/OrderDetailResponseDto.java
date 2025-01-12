@@ -1,9 +1,11 @@
 package org.team6.coffeebeanery.order.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 import org.team6.coffeebeanery.order.model.Order;
 import org.team6.coffeebeanery.product.model.Product;
 
+@Getter
 @Builder
 public class OrderDetailResponseDto {
     private Integer orderDetailId; //주문 상세 ID

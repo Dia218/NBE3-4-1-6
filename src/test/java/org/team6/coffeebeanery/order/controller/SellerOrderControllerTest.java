@@ -23,7 +23,6 @@ import org.team6.coffeebeanery.order.service.SellerOrderService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,13 +49,23 @@ public class SellerOrderControllerTest {
         System.out.println(orderRepository.findAll().size());
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/admin/orders")
+                        .param("page", "0")
+                        .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print());
 
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].customerEmail").value("email5@email.com"))
-                .andExpect(jsonPath("$", Matchers.hasSize(5)));
+                // items 필드에 10개의 주문이 포함되어야 한다.
+                .andExpect(jsonPath("$.items", Matchers.hasSize(10)))
+                // 전체 주문 수는 17개
+                .andExpect(jsonPath("$.totalItems").value(17))
+                // 총 페이지 수는 2페이지
+                .andExpect(jsonPath("$.totalPages").value(2))
+                // 현재 페이지 번호는 1 (0-based index)
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                // 페이지 크기는 10
+                .andExpect(jsonPath("$.pageSize").value(10));
     }
 
     @Test
@@ -64,14 +73,18 @@ public class SellerOrderControllerTest {
     void getOrdersByEmail() throws Exception {
         List<Order> orders = createOrders();
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/admin/orders/search")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/admin/orders")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("email", "email3@email.com"))
+                        .param("email", "email3@email.com")
+                        .param("page", "0")
+                        .param("size", "10"))
                 .andDo(print());
 
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[?(@.customerEmail == 'email3@email.com')]", hasSize(1))); // 해당 이메일 주문 개수 확인
+                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))  // 이메일에 해당하는 주문 1개가 첫 페이지에 있어야 함
+                .andExpect(jsonPath("$.totalItems").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1));
     }
 
     @Test
@@ -79,19 +92,23 @@ public class SellerOrderControllerTest {
     void getOrdersByWrongEmail() throws Exception {
         List<Order> orders = createOrders();
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/admin/orders/search")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/admin/orders")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("email", "email99@email.com"))
+                        .param("email", "email99@email.com")
+                        .param("page", "0")
+                        .param("size", "10"))
                 .andDo(print());
 
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0))); // 해당 이메일 주문 개수 확인
+                .andExpect(jsonPath("$.items", Matchers.hasSize(0)))
+                .andExpect(jsonPath("$.totalItems").value(0))
+                .andExpect(jsonPath("$.totalPages").value(0));
     }
 
     // 테스트 데이터 5개
     public List<Order> createOrders() throws InterruptedException {
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 17; i++) {
             Delivery delivery = new Delivery();
             delivery.setDeliveryNumber((double) i * 1000);
             delivery.setDeliveryCompany("우체국");

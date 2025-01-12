@@ -6,10 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.team6.coffeebeanery.order.dto.OrderDetailResponseDto;
 import org.team6.coffeebeanery.order.dto.OrderResponseDto;
 import org.team6.coffeebeanery.order.model.Order;
-import org.team6.coffeebeanery.order.model.OrderDetail;
 import org.team6.coffeebeanery.order.repository.OrderRepository;
 
 import java.util.List;
@@ -19,18 +17,21 @@ import java.util.List;
 public class SellerOrderService {
     private final OrderRepository orderRepository;
 
-    public Page<OrderResponseDto> getOrders(int page) {
+    public Page<OrderResponseDto> getOrders(int page, int size) {
         // 주문 일자 최신순으로 정렬
         Sort sort = Sort.by(Sort.Order.desc("orderCreatedAt"));
-        Pageable pageable = PageRequest.of(page, 10, sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
         return orderRepository
                 .findAll(pageable)
                 .map(this::convertToOrderResponseDto);
     }
 
-    public List<Order> getOrdersByEmail(String email) {
+    public Page<OrderResponseDto> getOrdersByEmail(String email, int page, int size) {
         Sort sort = Sort.by(Sort.Order.desc("orderCreatedAt"));
-        return orderRepository.findAllByCustomerEmail(email, sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return orderRepository
+                .findAllByCustomerEmail(email, pageable)
+                .map(this::convertToOrderResponseDto);
     }
 
     // Order -> OrderResponseDto 변환 메서드
