@@ -7,5 +7,4 @@ import org.team6.coffeebeanery.order.model.Order;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     Page<Order> findAllByCustomerEmail(String customerEmail, Pageable pageable);
-    Page<Order> findAllBy(Pageable pageable);
 }
