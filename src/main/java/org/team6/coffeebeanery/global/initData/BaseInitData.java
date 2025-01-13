@@ -42,7 +42,7 @@ public class BaseInitData {
         if (sellerOrderService.count() > 0 ) return;
         for (int i = 1; i <= 17; i++) {
             Delivery delivery = new Delivery();
-            delivery.setDeliveryNumber((double) i * 1000);
+            delivery.setDeliveryNumber((long) i * 1000);
             delivery.setDeliveryCompany("우체국");
 
             List<OrderDetail> orderDetails = new ArrayList<>();
@@ -54,7 +54,7 @@ public class BaseInitData {
                     .address(new Address("baseAddress" + i,
                             "detailAddress" + i,
                             "z" + (int) i))
-                    .totalPrice((double) i * 10000)
+                    .totalPrice((long) i * 10000)
                     .orderStatus(OrderStatus.ORDERED)
                     .delivery(delivery)
                     .orderDetails(orderDetails)

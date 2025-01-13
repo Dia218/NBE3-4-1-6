@@ -7,8 +7,8 @@ import org.team6.coffeebeanery.delivery.model.Delivery;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-01-13T17:32:11+0900",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 23.0.1 (GraalVM Community)"
+    date = "2025-01-13T19:58:12+0900",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 23.0.1 (GraalVM Community)"
 )
 @Component
 public class DeliveryMapperImpl implements DeliveryMapper {

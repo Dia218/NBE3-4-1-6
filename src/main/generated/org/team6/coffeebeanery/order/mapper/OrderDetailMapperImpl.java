@@ -7,8 +7,8 @@ import org.team6.coffeebeanery.order.model.OrderDetail;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-01-13T17:32:12+0900",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 23.0.1 (GraalVM Community)"
+    date = "2025-01-13T19:58:12+0900",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 23.0.1 (GraalVM Community)"
 )
 @Component
 public class OrderDetailMapperImpl implements OrderDetailMapper {
@@ -23,7 +23,9 @@ public class OrderDetailMapperImpl implements OrderDetailMapper {
 
         orderDetailDTO.orderDetailId( orderDetail.getOrderDetailId() );
         orderDetailDTO.productQuantity( orderDetail.getProductQuantity() );
-        orderDetailDTO.orderPrice( orderDetail.getOrderPrice() );
+        if ( orderDetail.getOrderPrice() != null ) {
+            orderDetailDTO.orderPrice( orderDetail.getOrderPrice().intValue() );
+        }
         orderDetailDTO.product( orderDetail.getProduct() );
         orderDetailDTO.order( orderDetail.getOrder() );
 
@@ -40,7 +42,9 @@ public class OrderDetailMapperImpl implements OrderDetailMapper {
 
         orderDetail.setOrderDetailId( orderDetailDTO.getOrderDetailId() );
         orderDetail.setProductQuantity( orderDetailDTO.getProductQuantity() );
-        orderDetail.setOrderPrice( orderDetailDTO.getOrderPrice() );
+        if ( orderDetailDTO.getOrderPrice() != null ) {
+            orderDetail.setOrderPrice( orderDetailDTO.getOrderPrice().longValue() );
+        }
         orderDetail.setProduct( orderDetailDTO.getProduct() );
         orderDetail.setOrder( orderDetailDTO.getOrder() );
 
