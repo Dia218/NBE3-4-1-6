@@ -10,7 +10,7 @@ import org.team6.coffeebeanery.product.model.Product;
 @Setter
 @Builder
 public class OrderDetailDTO {
-    private Integer orderDetailId; //주문 상세 ID
+    private Long orderDetailId; //주문 상세 ID
     
     private Integer productQuantity; //주문 상품 수량
     

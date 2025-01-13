@@ -1,4 +1,4 @@
-package org.team6.coffeebeanery;
+package org.team6.coffeebeanery.common;
 
 
 import org.junit.jupiter.api.Test;
