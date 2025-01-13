@@ -22,7 +22,7 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderId; //주문 ID
+    private Long orderId; //주문 ID
     
     @Column(length = 254, nullable = false)
     private String customerEmail; //고객 이메일
@@ -34,7 +34,7 @@ public class Order {
     private LocalDateTime orderCreatedAt; //주문 날짜 및 시간
 
     @Column(nullable = false)
-    private Double totalPrice; //총 주문 금액
+    private Long totalPrice; //총 주문 금액
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

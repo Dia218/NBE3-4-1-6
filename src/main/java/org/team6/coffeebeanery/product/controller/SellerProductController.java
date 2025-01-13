@@ -29,14 +29,14 @@ public class SellerProductController {
     }
     
     @PutMapping("/seller/products/{productId}") //판매자용) 기존 상품 정보 수정
-    public ProductDTO updateProduct(@PathVariable Integer productId, @Valid @RequestBody ProductDTO productDTO) {
+    public ProductDTO updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductDTO productDTO) {
         Product updatedProduct = sellerProductService.updateProduct(productId, productMapper.toEntity(productDTO));
         // Mapper 사용
         return productMapper.toDTO(updatedProduct);
     }
     
     @DeleteMapping("/seller/products/{productId}") //판매자용) 상품 삭제
-    public void deleteProduct(@PathVariable Integer productId) {
+    public void deleteProduct(@PathVariable Long productId) {
         sellerProductService.deleteProduct(productId);
     }
 }

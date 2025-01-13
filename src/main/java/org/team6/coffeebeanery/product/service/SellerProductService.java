@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.team6.coffeebeanery.common.exception.ResourceNotFoundException;
 import org.team6.coffeebeanery.product.model.Product;
 import org.team6.coffeebeanery.product.repository.ProductRepository;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +23,7 @@ public class SellerProductService {
         return this.productRepository.save(product);
     }
     
-    public Product updateProduct(Integer productId, Product updatedProduct) {
+    public Product updateProduct(Long productId, Product updatedProduct) {
         Product existingProduct = productRepository.findById(productId)
                                                    .orElseThrow(() -> new ResourceNotFoundException(
                                                            "Product not found - id: " + productId));
@@ -37,9 +37,10 @@ public class SellerProductService {
         return productRepository.save(existingProduct);
     }
     
-    public void deleteProduct(Integer productId) {
+    public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
-                                           .orElseThrow(() -> new ResourceNotFoundException("Product not found - id: " + productId));
+                                           .orElseThrow(() -> new ResourceNotFoundException(
+                                                   "Product not found - id: " + productId));
         productRepository.delete(product);
     }
 }

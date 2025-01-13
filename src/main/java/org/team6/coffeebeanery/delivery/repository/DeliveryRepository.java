@@ -1,7 +1,7 @@
 package org.team6.coffeebeanery.delivery.repository;
 
-import org.team6.coffeebeanery.delivery.model.Delivery;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.team6.coffeebeanery.delivery.model.Delivery;
 
-public interface DeliveryRepository extends JpaRepository<Delivery, Integer> {
+public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
 }

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class DeliveryDTO {
-    private Integer deliveryId; // 배송 ID
-    private Double deliveryNumber; // 운송장 번호
+    private Long deliveryId; // 배송 ID
+    private Long deliveryNumber; // 운송장 번호
     private String deliveryCompany; // 택배사
 }
