@@ -1,6 +1,7 @@
 package org.team6.coffeebeanery.order.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 import org.team6.coffeebeanery.common.constant.OrderStatus;
 import org.team6.coffeebeanery.common.model.Address;
@@ -10,6 +11,7 @@ import org.team6.coffeebeanery.order.model.OrderDetail;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 @Setter
 @Builder
 public class OrderDTO {
