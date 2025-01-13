@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer productId; //상품 ID
+    private Long productId; //상품 ID
     
     @NotNull(message = "상품 이름은 필수입니다.")
     @Size(min = 1, max = 30, message = "상품 이름은 1자 이상, 30자 이하로 입력해주세요.")
@@ -27,7 +27,7 @@ public class Product {
     
     @NotNull(message = "상품 가격은 필수입니다.")
     @Min(value = 1, message = "상품 가격은 1원 이상이어야 합니다.")
-    private Integer productPrice; //상품 가격
+    private Long productPrice; //상품 가격
     
     @Url(message = "유효한 이미지 URL을 입력해주세요.")
     private String productImageURL; //상품 이미지 URL
