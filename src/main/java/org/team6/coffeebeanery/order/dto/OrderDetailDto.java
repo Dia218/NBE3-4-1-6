@@ -7,7 +7,7 @@ import org.team6.coffeebeanery.product.model.Product;
 
 @Getter
 @Builder
-public class OrderDetailResponseDto {
+public class OrderDetailDto {
     private Integer orderDetailId; //주문 상세 ID
 
     private Integer productQuantity; //주문 상품 수량

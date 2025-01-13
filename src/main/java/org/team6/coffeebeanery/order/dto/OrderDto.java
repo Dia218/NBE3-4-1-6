@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class OrderResponseDto {
+public class OrderDto {
     private Integer orderId; //주문 ID
 
     private String customerEmail; //고객 이메일

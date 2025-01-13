@@ -6,6 +6,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 import org.team6.coffeebeanery.common.constant.OrderStatus;
 import org.team6.coffeebeanery.common.model.Address;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
+@Profile("!test")
 public class BaseInitData {
     private final SellerOrderService sellerOrderService;
     private final OrderRepository orderRepository;
