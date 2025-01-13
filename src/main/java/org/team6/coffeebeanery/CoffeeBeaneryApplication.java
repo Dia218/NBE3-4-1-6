@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @EnableJpaAuditing
 @SpringBootApplication
+
 public class CoffeeBeaneryApplication {
 
 	public static void main(String[] args) {
