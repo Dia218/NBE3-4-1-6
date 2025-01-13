@@ -40,9 +40,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus; //주문 상태
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Delivery delivery; //연결된 배송
     
-    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE) //주문 상세(상품) 목록
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true) //주문 상세(상품) 목록
     private List<OrderDetail> orderDetails;
 }
