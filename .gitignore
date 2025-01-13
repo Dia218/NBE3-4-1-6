@@ -41,3 +41,4 @@ out/
 /local/local.mv.db
 /local/local.trace.db
 /local/local.lock.db
+/src/main/generated/
