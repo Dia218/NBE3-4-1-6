@@ -7,13 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.team6.coffeebeanery.order.dto.OrderDTO;
-import org.team6.coffeebeanery.order.model.Order;
+import org.team6.coffeebeanery.order.mapper.OrderMapper;
 import org.team6.coffeebeanery.order.repository.OrderRepository;
 
 @RequiredArgsConstructor
 @Service
 public class SellerOrderService {
     private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
 
     public Page<OrderDTO> getOrders(int page, int size) {
         // 주문 일자 최신순으로 정렬
@@ -21,7 +22,7 @@ public class SellerOrderService {
         Pageable pageable = PageRequest.of(page, size, sort);
         return orderRepository
                 .findAll(pageable)
-                .map(this::convertToOrderDto);
+                .map(orderMapper::toDTO);
     }
 
     public Page<OrderDTO> getOrdersByEmail(String email, int page, int size) {
@@ -29,21 +30,7 @@ public class SellerOrderService {
         Pageable pageable = PageRequest.of(page, size, sort);
         return orderRepository
                 .findAllByCustomerEmail(email, pageable)
-                .map(this::convertToOrderDto);
-    }
-
-    // Order -> OrderResponseDto 변환 메서드
-    private OrderDTO convertToOrderDto(Order order) {
-        return OrderDTO
-                .builder()
-                .orderId(order.getOrderId())
-                .customerEmail(order.getCustomerEmail())
-                .address(order.getAddress())
-                .orderCreatedAt(order.getOrderCreatedAt())
-                .totalPrice(order.getTotalPrice())
-                .orderStatus(order.getOrderStatus())
-                .orderDetails(order.getOrderDetails())
-                .build();
+                .map(orderMapper::toDTO);
     }
 
     public long count() {
