@@ -1,34 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import './OrderManagementPage.css'; // 스타일 파일
-import { fetchOrders } from '../../services/SellerOrderService'; // 수정된 경로로 import
+import './OrderManagementPage.css';
+import { fetchOrders } from '../../services/SellerOrderService';
 
 const OrderManagementPage = () => {
   const [orders, setOrders] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);  // 현재 페이지 상태
-  const [totalPages, setTotalPages] = useState(1);   // 전체 페이지 수
-  const pageSize = 10;  // 페이지 크기 (한 페이지에 보여줄 주문 개수)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [emailFilter, setEmailFilter] = useState('');  // 이메일 필터 상태 추가
+  const pageSize = 10;
 
   // 주문 데이터 불러오기
   useEffect(() => {
-    fetchOrders(currentPage - 1, pageSize)  // 페이지는 0부터 시작하므로 currentPage - 1
+    fetchOrders(currentPage - 1, pageSize, emailFilter)  // 이메일 필터 파라미터 추가
       .then((data) => {
-        console.log(data); // 응답 구조 확인
+        console.log(data);
         setOrders(data.items);
         setTotalPages(data.totalPages);
       })
       .catch((error) => {
         console.error('Error fetching orders:', error);
       });
-  }, [currentPage]); // currentPage가 변경될 때마다 데이터를 새로 가져옴
+  }, [currentPage, emailFilter]);  // 이메일 필터가 변경될 때마다 다시 요청
 
   // 페이지 변경 함수
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
+  // 이메일 필터 변경 함수
+  const handleEmailFilterChange = (event) => {
+    setEmailFilter(event.target.value);
+  };
+
   return (
     <div className="order-management-page">
       <h1>주문 관리 페이지</h1>
+
+      {/* 이메일 입력 필드 추가 */}
+      <div>
+        <input
+          type="email"
+          placeholder="이메일로 주문 검색"
+          value={emailFilter}
+          onChange={handleEmailFilterChange}
+        />
+      </div>
+
       <table className="order-table">
         <thead>
           <tr>
