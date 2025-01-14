@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grids & Circle</title>
+    <link href="@{/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        /* 페이지 전역 스타일 */
+        body {
+            background-color: #dddddd;
+        }
+
+        /* 메인 제목 스타일 */
+        .main-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 600;
+            margin: 40px 0;
+        }
+
+        /* 컨텐츠 영역 스타일 */
+        .content-wrapper {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 이메일 입력 폼 영역 스타일 */
+        .email-form-section {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* 입력 필드 및 버튼 스타일 */
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            text-align: center;
+            display: block;
+        }
+
+        .form-control {
+            width: calc(100% - 40px);
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+
+        /* 에러 메시지 스타일 */
+        .error-message {
+            color: #dc3545;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .error-message p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        /* 버튼 스타일 */
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-button:hover {
+            background-color: #0b5ed7;
+        }
+    </style>
+</head>
+<body>
+<!-- 메인 제목 -->
+<h1 class="main-title">Grids & Circle</h1>
+
+<!-- 이메일 입력 폼 -->
+<div class="content-wrapper">
+    <div class="email-form-section">
+        <form th:action="@{/order/check}" method="post" th:object="${emailForm}">
+            <div class="form-group">
+                <!-- 이메일 입력 필드 -->
+                <label for="email" class="form-label">email :</label>
+                <input type="email"
+                       class="form-control"
+                       id="email"
+                       th:field="*{email}"
+                       required>
+            </div>
+
+            <!-- 이메일이 존재하지 않을 때 에러 메시지 표시 -->
+            <div th:if="${error}" class="error-message">
+                <p>앗, 주문 내역이 없어요!</p>
+                <p>이메일 주소를 확인해주세요</p>
+            </div>
+
+            <!-- 제출 버튼 -->
+            <button type="submit" class="submit-button">입력</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
