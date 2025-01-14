@@ -11,13 +11,13 @@ import org.team6.coffeebeanery.order.service.BuyerOrderService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/buyer")
 
 public class BuyerLoginController {
     private final BuyerLoginService buyerLoginService;
 
     // 이메일 입력 폼 페이지 표시
-    @GetMapping("/check")
+    @GetMapping("/login")
     public String showEmailForm(Model model) {
         model.addAttribute("emailForm", new EmailForm()); // 빈 EmailForm 객체 생성
         model.addAttribute("error", false); // 에러 초기값 설정
@@ -25,7 +25,7 @@ public class BuyerLoginController {
     }
 
     // 이메일 확인 및 처리
-    @PostMapping("/check")
+    @PostMapping("/login")
     public String checkEmail(
             @Valid @ModelAttribute EmailForm emailForm, // 유효성 검사된 EmailForm 객체
             BindingResult bindingResult, // 유효성 검사 결과
