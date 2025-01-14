@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grids & Circle - 관리자 로그인</title>
+    <link href="@{/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #dddddd;
+        }
+        .main-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 600;
+            margin: 40px 0;
+        }
+        .content-wrapper {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .password-form-section {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .form-group {
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            text-align: center;
+            display: block;
+        }
+        .form-control {
+            width: calc(100% - 40px);
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .error-message {
+            color: #dc3545;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .error-message p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .submit-button:hover {
+            background-color: #0b5ed7;
+        }
+    </style>
+</head>
+<body>
+<h1 class="main-title">Grids & Circle</h1>
+
+<div class="content-wrapper">
+    <div class="password-form-section">
+        <form th:action="@{/seller/login}" method="post" th:object="${passwordForm}">
+            <div class="form-group">
+                <label for="password" class="form-label">password:</label>
+                <input type="password"
+                       class="form-control"
+                       id="password"
+                       th:field="*{password}"
+                       required>
+            </div>
+
+            <!-- 비밀번호가 틀렸을 때 에러 메시지 표시 -->
+            <div th:if="${error}" class="error-message">
+                <p>비밀번호가 잘못되었습니다!</p>
+            </div>
+
+            <button type="submit" class="submit-button">입력</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
