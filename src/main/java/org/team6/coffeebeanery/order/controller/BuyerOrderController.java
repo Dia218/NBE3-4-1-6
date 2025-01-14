@@ -21,7 +21,7 @@ public class BuyerOrderController {
     public String showEmailForm(Model model) {
         model.addAttribute("emailForm", new EmailForm()); // 빈 EmailForm 객체 생성
         model.addAttribute("error", false); // 에러 초기값 설정
-        return "email_form";
+        return "customerLogin";
     }
 
     // 이메일 확인 및 처리
@@ -32,7 +32,7 @@ public class BuyerOrderController {
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            return "email_form"; // 유효성 검사 실패 시 다시 폼 페이지로 반환
+            return "customerLogin"; // 유효성 검사 실패 시 다시 폼 페이지로 반환
         }
 
         // 이메일 존재 여부 확인
@@ -44,7 +44,7 @@ public class BuyerOrderController {
         } else {
             // 이메일 미존재 시 에러 메시지 표시
             model.addAttribute("error", true);
-            return "email_form";
+            return "customerLogin";
         }
     }
 }
