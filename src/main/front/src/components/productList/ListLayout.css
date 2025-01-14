@@ -1,0 +1,8 @@
+.list-layout {
+    display: grid;
+    grid-template-columns: 1fr; /* 1줄: 1개 */
+    row-gap: 16px; /* 간격 */
+    width: 100%;
+    max-width: 600px; /* 전체 최대 너비 */
+    margin: 0 auto; /* 부모로부터 중앙 정렬 */
+}
