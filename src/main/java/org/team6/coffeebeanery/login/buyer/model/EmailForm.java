@@ -1,4 +1,4 @@
-package org.team6.coffeebeanery.order.model;
+package org.team6.coffeebeanery.login.buyer.model;
 
 
 import jakarta.validation.constraints.Email;
