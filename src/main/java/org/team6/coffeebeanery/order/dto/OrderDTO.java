@@ -16,55 +16,55 @@ import java.util.List;
 public class OrderDTO {
     private Long orderId;
     private String customerEmail;
-
+    
     // Address 정보
     private String baseAddress;
     private String detailAddress;
     private String zipCode;
-
+    
     private LocalDateTime orderCreatedAt;
     private Long totalPrice;
     private OrderStatus orderStatus;
-
+    
     // Delivery 정보
     private Long deliveryId;
-
+    
     // OrderDetail 정보
     private List<OrderDetailDTO> orderDetails;
-
+    
     public static OrderDTO toDTO(Order order) {
         if (order == null) {
             return null;
         }
-
+        
         // Address 변환
         Address address = order.getAddress();
         String zipCode = address != null ? address.getZipCode() : null;
         String baseAddress = address != null ? address.getBaseAddress() : null;
         String detailAddress = address != null ? address.getDetailAddress() : null;
-
-        // Delivery ID 변환
-        Long deliveryId = order.getDelivery() != null ? order.getDelivery().getDeliveryId() : null;
-
+        
+        // Delivery 변환 (Order -> DeliveryDTO)
+        Long deliveryId = order.getDelivery() != null ? order.getDelivery()
+                                                             .getDeliveryId() : null;
+        
         // OrderDetails 변환
-        List<OrderDetailDTO> orderDetails = order.getOrderDetails() != null
-                ? order.getOrderDetails().stream()
-                .map(OrderDetailDTO::toDTO)
-                .toList()
-                : null;
-
+        List<OrderDetailDTO> orderDetails = order.getOrderDetails() != null ? order.getOrderDetails()
+                                                                                   .stream()
+                                                                                   .map(OrderDetailDTO::toDTO)
+                                                                                   .toList() : null;
+        
         // OrderDTO 빌드
         return OrderDTO.builder()
-                .orderId(order.getOrderId())
-                .customerEmail(order.getCustomerEmail())
-                .baseAddress(baseAddress)
-                .detailAddress(detailAddress)
-                .zipCode(zipCode)
-                .orderCreatedAt(order.getOrderCreatedAt())
-                .totalPrice(order.getTotalPrice())
-                .orderStatus(order.getOrderStatus())
-                .deliveryId(deliveryId)
-                .orderDetails(orderDetails)
-                .build();
+                       .orderId(order.getOrderId())
+                       .customerEmail(order.getCustomerEmail())
+                       .baseAddress(baseAddress)
+                       .detailAddress(detailAddress)
+                       .zipCode(zipCode)
+                       .orderCreatedAt(order.getOrderCreatedAt())
+                       .totalPrice(order.getTotalPrice())
+                       .orderStatus(order.getOrderStatus())
+                       .deliveryId(deliveryId)  // Delivery ID
+                       .orderDetails(orderDetails)
+                       .build();
     }
 }
