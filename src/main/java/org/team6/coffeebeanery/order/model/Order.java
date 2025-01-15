@@ -9,6 +9,7 @@ import org.team6.coffeebeanery.common.model.Address;
 import org.team6.coffeebeanery.delivery.model.Delivery;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -43,6 +44,7 @@ public class Order {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Delivery delivery; //연결된 배송
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true) //주문 상세(상품) 목록
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 }

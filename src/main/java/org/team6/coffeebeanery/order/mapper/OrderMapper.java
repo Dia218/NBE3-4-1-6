@@ -28,7 +28,7 @@ public interface OrderMapper {
     @Mapping(source = "deliveryId", target = "delivery.order.orderId")
     Order toEntity(OrderDTO orderDTO);
     
-    @Mapping(source = "productId", target = "product.productId")
+    @Mapping(source = "product.productId", target = "product.productId")
     @Mapping(source = "orderId", target = "order.orderId")
     OrderDetail orderDetailDTOToOrderDetail(OrderDetailDTO orderDetailDTO);
     

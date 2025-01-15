@@ -21,7 +21,7 @@ public class OrderDetail {
     @Column(nullable = false)
     private Long orderPrice; //주문 시점 가격
     
-    @OneToOne
+    @ManyToOne
     private Product product; //주문 상품
     
     @ManyToOne
