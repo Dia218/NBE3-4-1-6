@@ -12,10 +12,10 @@ public class DeliveryTestDataUtils {
         String companyA = "대운택배";
         String companyB = "한잔택배";
         String companyC = "CC택배";
-        
-        Long numberA = 1234567890L;
-        Long numberB = 9876543210L;
-        Long numberC = 1357924680L;
+
+        String numberA = "1234567890";
+        String numberB = "9876543210";
+        String numberC = "1357924680";
         
         deliveryRepository.saveAll(Arrays.asList(createDelivery(numberA, companyA), createDelivery(numberB, companyB),
                                                  createDelivery(numberC, companyC)));
@@ -25,7 +25,7 @@ public class DeliveryTestDataUtils {
         deliveryRepository.deleteAll();
     }
     
-    private static Delivery createDelivery(Long deliveryNumber, String company) {
+    private static Delivery createDelivery(String deliveryNumber, String company) {
         Delivery delivery = new Delivery();
         delivery.setDeliveryNumber(deliveryNumber);
         delivery.setDeliveryCompany(company);

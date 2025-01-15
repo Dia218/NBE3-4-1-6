@@ -110,7 +110,7 @@ public class SellerOrderControllerTest {
     public List<Order> createOrders() throws InterruptedException {
         for (int i = 1; i <= 17; i++) {
             Delivery delivery = new Delivery();
-            delivery.setDeliveryNumber((long) i * 1000);
+            delivery.setDeliveryNumber(String.valueOf(i * 1000));
             delivery.setDeliveryCompany("우체국");
 
             List<OrderDetail> orderDetails = new ArrayList<>();
