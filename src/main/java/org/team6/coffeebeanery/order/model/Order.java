@@ -23,12 +23,12 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId; //주문 ID
-    
+
     @Column(length = 254, nullable = false)
     private String customerEmail; //고객 이메일
-    
+
     @Embedded
-    private Address address;//주소 합친 것
+    private Address address; // 상세 주소 합친거
 
     @CreatedDate
     private LocalDateTime orderCreatedAt; //주문 날짜 및 시간
