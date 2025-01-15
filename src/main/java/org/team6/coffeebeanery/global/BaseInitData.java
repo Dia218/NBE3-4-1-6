@@ -39,6 +39,9 @@ public class BaseInitData {
 
     @Transactional
     public void work1() {
+        if (orderRepository.count() == 0) {
+            return;
+        }
         Address address = new Address();
         address.setBaseAddress("인천시");
         address.setDetailAddress("연수구");
@@ -52,7 +55,6 @@ public class BaseInitData {
         product.setProductStock(100);
 
         productRepository.save(product);
-
 
 
         for (int i = 0; i < 30; i++) {
