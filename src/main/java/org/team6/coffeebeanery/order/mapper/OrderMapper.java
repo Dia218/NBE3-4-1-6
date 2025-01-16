@@ -10,7 +10,7 @@ import org.team6.coffeebeanery.product.mapper.ProductMapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {ProductMapper.class})
+@Mapper(componentModel = "spring", uses = {ProductMapper.class, OrderDetailMapper.class})
 public interface OrderMapper {
     
     @Mapping(source = "address.baseAddress", target = "baseAddress")
