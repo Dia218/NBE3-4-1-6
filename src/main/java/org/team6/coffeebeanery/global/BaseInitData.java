@@ -38,8 +38,8 @@ public class BaseInitData {
     }
 
     @Transactional
-    public void work1() {
-        if (orderRepository.count() == 0) {
+    public void work1() throws InterruptedException {
+        if (orderRepository.count() != 0) {
             return;
         }
         Address address = new Address();
@@ -57,7 +57,7 @@ public class BaseInitData {
         productRepository.save(product);
 
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 1; i <= 30; i++) {
 
 
             Order order = Order
@@ -91,6 +91,8 @@ public class BaseInitData {
             order.setTotalPrice(orderDetail.getOrderPrice() * orderDetail.getProductQuantity());
 
             orderRepository.save(order);
+
+            Thread.sleep(100);
         }
 
     }
