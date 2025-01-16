@@ -1,4 +1,4 @@
-package org.team6.coffeebeanery.delivery;
+package org.team6.coffeebeanery.common.data;
 
 import org.springframework.stereotype.Component;
 import org.team6.coffeebeanery.delivery.model.Delivery;
@@ -12,7 +12,7 @@ public class DeliveryTestDataUtils {
         String companyA = "대운택배";
         String companyB = "한잔택배";
         String companyC = "CC택배";
-
+        
         String numberA = "1234567890";
         String numberB = "9876543210";
         String numberC = "1357924680";
