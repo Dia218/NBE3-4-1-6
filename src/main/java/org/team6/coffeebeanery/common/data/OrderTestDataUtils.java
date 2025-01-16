@@ -1,4 +1,4 @@
-package org.team6.coffeebeanery.order;
+package org.team6.coffeebeanery.common.data;
 
 import org.springframework.stereotype.Component;
 import org.team6.coffeebeanery.common.constant.OrderStatus;
@@ -28,56 +28,57 @@ public class OrderTestDataUtils {
         // 테스트 데이터 생성 호출
         createOrder(orderRepository, orderDetailRepository, "customer1@example.com", OrderStatus.ORDERED,
                     products.get(0), 2, 10000L, products.get(1), 1, 15000L,
-                    new Address("경기도 성남시 분당구 불정로 5", "초록빌딩", "123-45"));
+                    new Address("경기도 성남시 분당구 불정로 5", "초록빌딩", "12345"));
         
         createOrder(orderRepository, orderDetailRepository, "customer2@example.com", OrderStatus.PREPARING,
                     products.get(1), 3, 15000L, products.get(2), 2, 12000L,
-                    new Address("경기도 성남시 분당구 판교로 256번길 3", "게임오피스", "543-21"));
+                    new Address("경기도 성남시 분당구 판교로 256번길 3", "게임오피스", "54321"));
         
         createOrder(orderRepository, orderDetailRepository, "customer3@example.com", OrderStatus.DELIVERED,
                     products.get(2), 3, 12000L, products.get(0), 4, 10000L,
-                    new Address("서울시 송파구 위례성대로 1", "민족빌딩", "789-01"));
+                    new Address("서울시 송파구 위례성대로 1", "민족빌딩", "78901"));
         
         createOrder(orderRepository, orderDetailRepository, "customer3@example.com", OrderStatus.CANCELLED,
                     products.get(2), 3, 12000L, products.get(1), 2, 15000L,
-                    new Address("제주특별자치도 제주시 첨단로 141", "노란아파트", "789-01"));
+                    new Address("제주특별자치도 제주시 첨단로 141", "노란아파트", "78901"));
     }
     
     private static void createOrder(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository,
                                     String customerEmail, OrderStatus orderStatus, Product product1, int quantity1,
                                     Long price1, Product product2, int quantity2, Long price2, Address address) {
-        // Order 생성
-        Order order = new Order();
-        order.setCustomerEmail(customerEmail);
-        order.setOrderStatus(orderStatus);
-        order.setOrderCreatedAt(LocalDateTime.now());
-        order.setAddress(address);
-        
-        // Order 저장
-        order = orderRepository.save(order);
-        
         // 첫 번째 OrderDetail 생성
         OrderDetail orderDetail1 = new OrderDetail();
-        orderDetail1.setOrder(order);
         orderDetail1.setProduct(product1);
         orderDetail1.setProductQuantity(quantity1);
         orderDetail1.setOrderPrice(price1 * quantity1);
         
         // 두 번째 OrderDetail 생성
         OrderDetail orderDetail2 = new OrderDetail();
-        orderDetail2.setOrder(order);
         orderDetail2.setProduct(product2);
         orderDetail2.setProductQuantity(quantity2);
         orderDetail2.setOrderPrice(price2 * quantity2);
         
+        // Order 총 금액 계산
+        Long totalPrice = orderDetail1.getOrderPrice() + orderDetail2.getOrderPrice();
+        
+        // Order 생성 (totalPrice 미리 설정)
+        Order order = new Order();
+        order.setCustomerEmail(customerEmail);
+        order.setOrderStatus(orderStatus);
+        order.setOrderCreatedAt(LocalDateTime.now());
+        order.setAddress(address);
+        order.setTotalPrice(totalPrice);  // totalPrice 설정
+        
+        // Order 저장
+        order = orderRepository.save(order);
+        
+        // OrderDetail과 Order 연결 후 저장
+        orderDetail1.setOrder(order);
+        orderDetail2.setOrder(order);
+        
         // OrderDetail 저장
         orderDetailRepository.save(orderDetail1);
         orderDetailRepository.save(orderDetail2);
-        
-        // Order 총 금액 업데이트
-        Long totalPrice = orderDetail1.getOrderPrice() + orderDetail2.getOrderPrice();
-        order.setTotalPrice(totalPrice);
-        orderRepository.save(order);
     }
     
     public static void deleteTestOrders(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository) {

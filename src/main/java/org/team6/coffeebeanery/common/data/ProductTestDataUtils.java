@@ -1,4 +1,4 @@
-package org.team6.coffeebeanery.product;
+package org.team6.coffeebeanery.common.data;
 
 import org.springframework.stereotype.Component;
 import org.team6.coffeebeanery.product.model.Product;
