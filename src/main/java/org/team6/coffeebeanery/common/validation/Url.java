@@ -9,13 +9,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Constraint(validatedBy = UrlValidator.class)
-@Target({ElementType.FIELD, ElementType.PARAMETER })
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Url {
-
-    String message() default "유효하지 않은 URL 형식입니다."; // 기본 메시지
-
-    Class<?>[] groups() default {}; // groups 추가 (필수)
-
-    Class<? extends Payload>[] payload() default {}; // payload 추가 (필수)
+    
+    String message() default "유효한 URL이 아닙니다.";
+    
+    // groups 파라미터 추가
+    Class<?>[] groups() default {};  // groups 속성 추가
+    
+    Class<? extends Payload>[] payload() default {};
+    
 }
