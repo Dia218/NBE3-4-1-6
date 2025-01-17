@@ -29,7 +29,7 @@ import java.util.List;
 public class BuyerOrderService {
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
-    private final BuyerProductService buyerProductService;
+    private final SellerProductService buyerProductService;
 
     // DB에 존재하는 이메일인지 검증
     public boolean validateEmail(String email) {

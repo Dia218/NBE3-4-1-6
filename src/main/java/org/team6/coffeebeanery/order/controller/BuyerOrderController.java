@@ -16,6 +16,7 @@ import org.team6.coffeebeanery.order.dto.OrderDTO;
 import org.team6.coffeebeanery.order.service.BuyerOrderService;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
 import org.team6.coffeebeanery.product.service.BuyerProductService;
+import org.team6.coffeebeanery.product.service.SellerProductService;
 
 import java.util.List;
 
@@ -24,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BuyerOrderController {
     private final BuyerOrderService orderService;
-    private final BuyerProductService productService;
 
     // 이메일 검증
     @PostMapping("/email")
@@ -40,7 +40,7 @@ public class BuyerOrderController {
                 .build();
     }
 
-    // 장바구니 목록 조회 by 이메일
+    // 주문 목록 조회 by 이메일
     @GetMapping("/list")
     public PageDTO<OrderDTO> orderList(@RequestParam("email") String customerEmail,
                                        @RequestParam(value = "page", defaultValue = "0") int page) {
