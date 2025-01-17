@@ -7,6 +7,6 @@ import org.team6.coffeebeanery.product.mapper.ProductMapper;
 public interface OrderDetailMapper {
     /*@Mapping(source = "order.orderId", target = "orderId")
     OrderDetailDTO toDTO(OrderDetail orderDetail);*/
-    
+
     // OrderDetail toEntity(OrderDetailDTO orderDetailDTO);
 }

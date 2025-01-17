@@ -14,10 +14,10 @@ import java.lang.annotation.Target;
 public @interface Url {
     
     String message() default "유효한 URL이 아닙니다.";
-    
+
     // groups 파라미터 추가
     Class<?>[] groups() default {};  // groups 속성 추가
     
     Class<? extends Payload>[] payload() default {};
-    
+
 }

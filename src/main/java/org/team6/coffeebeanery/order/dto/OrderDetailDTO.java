@@ -9,7 +9,7 @@ public record OrderDetailDTO(
         Long orderDetailId,      // 주문 상세 ID
         Integer productQuantity,  // 주문 상품 수량
         Long orderPrice,         // 주문 시점 가격
-        ProductDTO product      // 주문 상품 (Product ID)
+        ProductDTO productDTO      // 주문 상품
 ) {
     public static OrderDetailDTO toDTO(OrderDetail orderDetail) {
         if (orderDetail == null) {
