@@ -1,13 +1,8 @@
 package org.team6.coffeebeanery.order.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import org.team6.coffeebeanery.order.model.OrderDetail;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
-import org.team6.coffeebeanery.product.mapper.ProductMapper;
-import org.team6.coffeebeanery.product.model.Product;
 
 @Builder
 public record OrderDetailDTO (

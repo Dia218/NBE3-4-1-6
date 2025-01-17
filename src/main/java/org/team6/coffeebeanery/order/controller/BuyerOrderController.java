@@ -54,7 +54,8 @@ public class BuyerOrderController {
     public void order(@Valid @RequestBody OrderCreateReqBody reqBody,
                                         HttpSession session) {
 
-        List<ProductDTO> cart = (List<ProductDTO>)session.getAttribute("cart");
+         List<ProductDTO> cart = (List<ProductDTO>)session.getAttribute("cart");
+
 
         if(cart == null) {
             throw new IllegalStateException("장바구니가 비어있습니다.");
