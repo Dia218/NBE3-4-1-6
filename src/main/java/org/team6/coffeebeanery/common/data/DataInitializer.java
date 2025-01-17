@@ -34,14 +34,4 @@ public class DataInitializer implements CommandLineRunner {
         
         System.out.println("초기 데이터 삽입 완료");
     }
-    
-    //@PreDestroy // 애플리케이션 종료 시 실행
-    public void cleanUp() {
-        // 데이터 삭제
-        DeliveryTestDataUtils.deleteTestDeliveries(deliveryRepository);
-        OrderTestDataUtils.deleteTestOrders(orderRepository, orderDetailRepository);
-        ProductTestDataUtils.deleteTestProducts(productRepository); // 순서 주의
-        
-        System.out.println("초기 데이터 삭제 완료");
-    }
 }
