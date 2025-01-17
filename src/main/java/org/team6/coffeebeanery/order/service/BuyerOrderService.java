@@ -1,8 +1,11 @@
 package org.team6.coffeebeanery.order.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.team6.coffeebeanery.common.constant.OrderStatus;
 import org.team6.coffeebeanery.common.model.Address;
+import org.team6.coffeebeanery.order.converter.OrderConverter;
+import org.team6.coffeebeanery.order.dto.OrderCreateReqBody;
 import org.team6.coffeebeanery.order.dto.OrderDTO;
 import org.team6.coffeebeanery.order.model.Order;
 import org.team6.coffeebeanery.order.model.OrderDetail;
@@ -15,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
 import org.team6.coffeebeanery.product.model.Product;
+import org.team6.coffeebeanery.product.service.BuyerProductService;
+import org.team6.coffeebeanery.product.service.SellerProductService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +29,7 @@ import java.util.List;
 public class BuyerOrderService {
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final BuyerProductService buyerProductService;
 
     // DB에 존재하는 이메일인지 검증
     public boolean validateEmail(String email) {
@@ -43,27 +49,32 @@ public class BuyerOrderService {
 
     // Order 저장
     public Order saveOrder(String email, Address address, long totalPrice) {
-        Order order = Order.builder()
-                .customerEmail(email)
-                .address(address)
-                .totalPrice(totalPrice)
-                .orderStatus(OrderStatus.ORDERED)
-                .build();
+        Order order = OrderConverter.toOrder(email, address, totalPrice);
         orderRepository.save(order);
         return order;
     }
 
     // OrderDetail 저장
-    public OrderDetail saveOrderDetail(ProductDTO item, Order order, Product product) {
-        return orderDetailRepository.save(OrderDetail.builder()
-                .order(order)
-                .product(product)
-                .orderPrice(item.getProductPrice())
-                .productQuantity(item.getProductStock())
-                .build());
+    public void saveOrderDetail(ProductDTO item, Order order, Product product) {
+        orderDetailRepository.save(OrderConverter.toOrderDetail(item, order, product));
     }
 
     public long count() {
         return orderRepository.count();
     }
+
+    @Transactional
+    public void saveOrderWithCart(List<ProductDTO> cart, OrderCreateReqBody reqBody) {
+        String email = reqBody.email();
+        Address address = reqBody.toAddress();
+
+        Order order = saveOrder(email, address, reqBody.totalPrice());
+
+        for (ProductDTO item : cart) {
+            Product product = buyerProductService.getProductById(item.getProductId());
+            saveOrderDetail(item, order, product);
+            buyerProductService.decreaseStock(item.getProductId(), item.getProductStock());
+        }
+    }
+
 }
