@@ -55,14 +55,17 @@
 
 package org.team6.coffeebeanery.product.service;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.team6.coffeebeanery.common.exception.ResourceNotFoundException;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
 import org.team6.coffeebeanery.product.mapper.ProductMapper;
 import org.team6.coffeebeanery.product.model.Product;
 import org.team6.coffeebeanery.product.repository.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,8 +104,59 @@ public class BuyerProductService {
         product.setProductStock(product.getProductStock() - quantity);
     }
     
-    public Product getProductById(Long productId) {
-        return null;
+    public List<ProductDTO> getCart(HttpSession session) {
+        Object cartObject = session.getAttribute("cart");
+        
+        // cartObject가 null이면 예외 처리
+        if (cartObject == null) {
+            throw new ResourceNotFoundException("장바구니 목록을 불러오는데 실패했습니다");
+        }
+        
+        // cartObject가 List인지를 확인
+        if (!(cartObject instanceof List<?> rawList)) {
+            throw new IllegalStateException("세션에 저장된 장바구니 데이터가 List 타입이 아닙니다");
+        }
+        
+        return convertToProductDTO(rawList);
+    }
+    
+    public void saveCart(Long productId, int quantity, HttpSession session) {
+        List<ProductDTO> cart = getCart(session);
+        if (cart == null) {
+            cart = new ArrayList<>();
+            session.setAttribute("cart", cart);
+        }
+        
+        boolean itemExists = true;
+        for (ProductDTO item : cart) {
+            if (item.getProductId()
+                    .equals(productId)) {
+                item.setProductStock(item.getProductStock() + quantity); // 기존 상품의 수량 증가
+                continue;
+            }
+            itemExists = false;
+        }
+        
+        if (!itemExists) {
+            ProductDTO productDTO = getProduct(productId);
+            productDTO.setProductStock(quantity);
+            cart.add(productDTO);
+        }
+    }
+    
+    private List<ProductDTO> convertToProductDTO(List<?> rawList) {
+        List<ProductDTO> productList = new ArrayList<>();
+        
+        // rawList 안의 각 항목을 하나씩 ProductDTO로 변환하여 새 리스트에 추가
+        for (Object item : rawList) {
+            if (item instanceof ProductDTO) {
+                productList.add((ProductDTO) item);
+            }
+            else {
+                throw new IllegalStateException("장바구니에 ProductDTO 타입이 아닌 데이터가 포함되어 있습니다");
+            }
+        }
+        return productList;
     }
 }
 
