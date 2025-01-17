@@ -29,7 +29,7 @@ import java.util.List;
 public class BuyerOrderService {
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
-    private final SellerProductService buyerProductService;
+    private final SellerProductService sellerProductService;
 
     // DB에 존재하는 이메일인지 검증
     public boolean validateEmail(String email) {
@@ -71,9 +71,9 @@ public class BuyerOrderService {
         Order order = saveOrder(email, address, reqBody.totalPrice());
 
         for (ProductDTO item : cart) {
-            Product product = buyerProductService.getProductById(item.getProductId());
+            Product product = sellerProductService.getProductById(item.getProductId());
             saveOrderDetail(item, order, product);
-            buyerProductService.decreaseStock(item.getProductId(), item.getProductStock());
+            sellerProductService.decreaseStock(item.getProductId(), item.getProductStock());
         }
     }
 

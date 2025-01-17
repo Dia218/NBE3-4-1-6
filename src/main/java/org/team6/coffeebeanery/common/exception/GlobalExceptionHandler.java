@@ -1,5 +1,6 @@
 package org.team6.coffeebeanery.common.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Comparator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -59,6 +62,23 @@ public class GlobalExceptionHandler {
                 .sorted(Comparator.comparing(FieldError::getField))
                 .map(error -> error.getField() + "-" + error.getDefaultMessage())
                 .collect(Collectors.joining("\n"));
+
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), message, System.currentTimeMillis());
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    // @Url 검증 실패 시 발생
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorDetails> handle(ConstraintViolationException ex){
+        String message = ex.getMessage();
+
+        // 에러 메시지만 추출
+        Pattern pattern = Pattern.compile("interpolatedMessage='([^']*)'");
+        Matcher matcher = pattern.matcher(message);
+
+        if(matcher.find()) {
+            message = matcher.group(1);
+        }
 
         ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), message, System.currentTimeMillis());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);

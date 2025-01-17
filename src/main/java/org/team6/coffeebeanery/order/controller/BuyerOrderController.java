@@ -15,8 +15,6 @@ import org.team6.coffeebeanery.order.dto.OrderCreateReqBody;
 import org.team6.coffeebeanery.order.dto.OrderDTO;
 import org.team6.coffeebeanery.order.service.BuyerOrderService;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
-import org.team6.coffeebeanery.product.service.BuyerProductService;
-import org.team6.coffeebeanery.product.service.SellerProductService;
 
 import java.util.List;
 
@@ -56,7 +54,24 @@ public class BuyerOrderController {
     public void order(@Valid @RequestBody OrderCreateReqBody reqBody,
                                         HttpSession session) {
 
-        List<ProductDTO> cart = (List<ProductDTO>)session.getAttribute("cart");
+         List<ProductDTO> cart = (List<ProductDTO>)session.getAttribute("cart");
+
+/*
+        프론트 테스트 용도
+        List<ProductDTO> cart = new ArrayList<ProductDTO>();
+
+        Product product1 = new Product();
+        product1.setProductId(1L);
+        product1.setProductStock(3);
+        product1.setProductPrice(10000L);
+
+        Product product2 = new Product();
+        product2.setProductId(2L);
+        product2.setProductStock(2);
+        product2.setProductPrice(15000L);
+
+        cart.add(ProductDTO.toDTO(product1));
+        cart.add(ProductDTO.toDTO(product2));*/
 
         if(cart == null) {
             throw new IllegalStateException("장바구니가 비어있습니다.");
