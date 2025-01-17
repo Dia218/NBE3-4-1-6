@@ -15,7 +15,7 @@ public class ProductDTO {
     private Integer productStock;
 
 
-    public static ProductDTO toDto(Product product) {
+    public static ProductDTO toDTO(Product product) {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setProductId(product.getProductId());
         productDTO.setProductName(product.getProductName());
