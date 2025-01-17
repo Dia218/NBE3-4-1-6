@@ -20,7 +20,7 @@ public record OrderDetailDTO(
                 .orderDetailId(orderDetail.getOrderDetailId())
                 .productQuantity(orderDetail.getProductQuantity())
                 .orderPrice(orderDetail.getOrderPrice())
-                .product(ProductDTO.toDTO(orderDetail.getProduct()))
+                .productDTO(ProductDTO.toDTO(orderDetail.getProduct()))
                 .build();
     }
 }
