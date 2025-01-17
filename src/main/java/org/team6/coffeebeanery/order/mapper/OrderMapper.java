@@ -31,6 +31,6 @@ public interface OrderMapper {
 /*    @Mapping(source = "product.productId", target = "product.productId")
     @Mapping(source = "orderId", target = "order.orderId")
     OrderDetail orderDetailDTOToOrderDetail(OrderDetailDTO orderDetailDTO);*/
-
+    
     List<OrderDetail> orderDetailDTOListToOrderDetailList(List<OrderDetailDTO> orderDetailDTOList);
 }
