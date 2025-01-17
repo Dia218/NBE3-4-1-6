@@ -16,11 +16,11 @@ public record OrderDetailDTO(
             return null;
         }
 
-        return new OrderDetailDTO(
-                orderDetail.getOrderDetailId(),
-                orderDetail.getProductQuantity(),
-                orderDetail.getOrderPrice(),
-                ProductDTO.toDTO(orderDetail.getProduct())
-        );
+        return OrderDetailDTO.builder()
+                .orderDetailId(orderDetail.getOrderDetailId())
+                .productQuantity(orderDetail.getProductQuantity())
+                .orderPrice(orderDetail.getOrderPrice())
+                .product(ProductDTO.toDTO(orderDetail.getProduct()))
+                .build();
     }
 }
