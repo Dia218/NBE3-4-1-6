@@ -22,17 +22,14 @@ public class SellerProductController {
     }
     
     @PostMapping("/seller/products") //판매자용) 새 상품 생성
-    public ProductDTO createProduct(@Valid @RequestBody ProductDTO productDTO) {
+    public void createProduct(@Valid @RequestBody ProductDTO productDTO) {
         Product product = productMapper.toEntity(productDTO);
-        Product createdProduct = sellerProductService.createProduct(product);
-        return productMapper.toDTO(createdProduct);
+        sellerProductService.createProduct(product);
     }
     
     @PutMapping("/seller/products/{productId}") //판매자용) 기존 상품 정보 수정
-    public ProductDTO updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductDTO productDTO) {
-        Product updatedProduct = sellerProductService.updateProduct(productId, productMapper.toEntity(productDTO));
-        // Mapper 사용
-        return productMapper.toDTO(updatedProduct);
+    public void updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductDTO productDTO) {
+        sellerProductService.updateProduct(productId, productMapper.toEntity(productDTO));
     }
     
     @DeleteMapping("/seller/products/{productId}") //판매자용) 상품 삭제
