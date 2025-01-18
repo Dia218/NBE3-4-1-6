@@ -8,6 +8,7 @@ import org.team6.coffeebeanery.delivery.model.Delivery;
 import org.team6.coffeebeanery.delivery.repository.DeliveryRepository;
 import org.springframework.stereotype.Service;
 import org.team6.coffeebeanery.order.model.Order;
+import org.team6.coffeebeanery.order.repository.OrderRepository;
 
 import java.util.List;
 import java.util.Random;
@@ -17,13 +18,24 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
+    private final OrderRepository orderRepository;
 
-    //해당 배송 ID가 없을 경우 출력 오류 메세지 수정
     public Delivery getDeliveryById(Long deliveryId) {
         return deliveryRepository.findById(deliveryId)
-                .orElseThrow(() -> new IllegalArgumentException("Delivery ID " + deliveryId + " does not exist. Please ensure the ID is correct."));
+                .orElseThrow(() -> new IllegalArgumentException("Delivery not found with id: " + deliveryId));
+    }
+    // 모든 배송 정보 조회 메서드 추가
+    public List<Delivery> getAllDeliveries() {
+        return deliveryRepository.findAll();
     }
 
+
+    public Delivery getDeliveryByOrderId(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
+        return deliveryRepository.findByOrder(order)
+                .orElseThrow(() -> new IllegalArgumentException("Delivery not found for order id: " + orderId));
+    }
     // 배송 상태 가져오기
     public String getDeliveryStatus(Delivery delivery) {
         return delivery.getOrder().getOrderStatus().getStatus();
