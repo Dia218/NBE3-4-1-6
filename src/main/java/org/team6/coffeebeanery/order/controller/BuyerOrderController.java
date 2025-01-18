@@ -66,4 +66,13 @@ public class BuyerOrderController {
             throw new IllegalStateException("주문 가능한 재고를 초과했습니다.");
         }
     }
+
+    // 주문 취소
+    @PutMapping("/list")
+    public ResponseEntity<Void> cancelOrder(@RequestParam Long orderId,
+                                       @RequestParam(value = "page", defaultValue = "0") int page
+                                         ) {
+        orderService.cancelOrder(orderId, page);
+        return ResponseEntity.ok().build();
+    }
 }
