@@ -1,8 +1,6 @@
 package org.team6.coffeebeanery.order.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 import org.team6.coffeebeanery.common.constant.OrderStatus;
 import org.team6.coffeebeanery.common.model.Address;
 import org.team6.coffeebeanery.order.model.Order;
@@ -15,9 +13,7 @@ import java.util.List;
 public record OrderDTO(
         Long orderId,
         String customerEmail,
-        String baseAddress,
-        String detailAddress,
-        String zipCode,
+        Address address,
         LocalDateTime orderCreatedAt,
         Long totalPrice,
         OrderStatus orderStatus,
@@ -52,9 +48,7 @@ public record OrderDTO(
         return OrderDTO.builder()
                 .orderId(order.getOrderId())
                 .customerEmail(order.getCustomerEmail())
-                .baseAddress(baseAddress)
-                .detailAddress(detailAddress)
-                .zipCode(zipCode)
+                .address(address)
                 .orderCreatedAt(order.getOrderCreatedAt())
                 .totalPrice(order.getTotalPrice())
                 .orderStatus(order.getOrderStatus())
