@@ -13,16 +13,17 @@ import org.team6.coffeebeanery.login.buyer.service.BuyerLoginService;
 
 import java.util.Map;
 
+// BuyerLoginController.java
 @RestController
 @RequestMapping("/api/buyer")
 @RequiredArgsConstructor
 public class BuyerLoginController {
-    private final BuyerLoginService buyerLoginService;
+    private final BuyerLoginService orderLoginService;
 
-    @PostMapping("/login")
+    @PostMapping("/email-input")  // URL 변경
     public ResponseEntity<?> validateEmail(@RequestBody @Valid EmailForm emailForm) {
         String email = emailForm.getEmail();
-        boolean emailExists = buyerLoginService.isCustomerEmailExists(email);
+        boolean emailExists = orderLoginService.isCustomerEmailExists(email);
 
         if (emailExists) {
             return ResponseEntity.ok().body(Map.of(
