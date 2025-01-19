@@ -69,10 +69,8 @@ public class BuyerOrderController {
 
     // 주문 취소
     @PatchMapping("/list")
-    public ResponseEntity<Void> cancelOrder(@RequestParam Long orderId,
-                                       @RequestParam(value = "page", defaultValue = "0") int page
-                                         ) {
-        orderService.cancelOrder(orderId, page);
+    public ResponseEntity<Void> cancelOrder(@RequestParam Long orderId) {
+        orderService.cancelOrder(orderId);
         return ResponseEntity.ok().build();
     }
 }

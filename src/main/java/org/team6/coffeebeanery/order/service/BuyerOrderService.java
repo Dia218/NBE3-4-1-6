@@ -78,14 +78,7 @@ public class BuyerOrderService {
     }
 
     @Transactional
-    public Page<OrderDTO> cancelOrder(Long orderId, int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("orderCreatedAt"));
-
-        int itemsPerPage = 5;
-
-        Pageable pageable = PageRequest.of(page, itemsPerPage, Sort.by(sorts));
-
+    public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "order not found - id: " + orderId));
@@ -95,8 +88,5 @@ public class BuyerOrderService {
         } else {
             throw new InvalidInputException("주문 취소는 배송 전에만 가능합니다.");
         }
-
-        return orderRepository.findAllByCustomerEmail(order.getCustomerEmail(), pageable).map(OrderDTO::toDTO);
-
     }
 }
