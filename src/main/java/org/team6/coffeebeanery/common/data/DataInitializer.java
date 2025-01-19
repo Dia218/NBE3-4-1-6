@@ -23,15 +23,15 @@ public class DataInitializer implements CommandLineRunner {
         this.orderDetailRepository = orderDetailRepository;
         this.productRepository = productRepository;
     }
-    
+
     @Override
-    public void run(String... args) throws Exception { // 애플리케이션 시작 시 실행
-        // Test 데이터 삽입
-        ProductTestDataUtils.createTestProducts(productRepository);   // 제품 데이터 삽입
-        DeliveryTestDataUtils.createTestDeliveries(deliveryRepository);  // 배송 데이터 삽입
-        OrderTestDataUtils.createTestOrders(orderRepository, orderDetailRepository, productRepository);  // 주문 데이터 삽입
-        
-        
+    public void run(String... args) throws Exception {
+
+        // 테스트 데이터 순차적으로 생성
+        ProductTestDataUtils.createTestProducts(productRepository);   // 1. 상품 데이터
+        OrderTestDataUtils.createTestOrders(orderRepository, orderDetailRepository, productRepository);  // 2. 주문 데이터
+        DeliveryTestDataUtils.createTestDeliveries(deliveryRepository, orderRepository);  // 3. 배송 데이터
+
         System.out.println("초기 데이터 삽입 완료");
     }
 }
