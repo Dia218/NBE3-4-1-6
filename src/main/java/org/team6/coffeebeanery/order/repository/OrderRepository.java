@@ -13,5 +13,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllByCustomerEmail(String email);
     Page<Order> findAllByCustomerEmail(String customerEmail, Pageable pageable);
-
+    boolean existsByCustomerEmail(String email);
 }
