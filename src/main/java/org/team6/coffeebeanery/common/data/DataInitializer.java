@@ -26,11 +26,6 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // 기존 데이터 삭제
-        deliveryRepository.deleteAll();
-        orderDetailRepository.deleteAll();
-        orderRepository.deleteAll();
-        productRepository.deleteAll();
 
         // 테스트 데이터 순차적으로 생성
         ProductTestDataUtils.createTestProducts(productRepository);   // 1. 상품 데이터
