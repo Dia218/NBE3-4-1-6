@@ -7,6 +7,5 @@ import org.team6.coffeebeanery.order.model.Order;
 import java.util.Optional;
 
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
-    Optional<Delivery> findByOrder(Order order);
-    boolean existsByOrder(Order order);
+    Optional<Delivery> findByOrderOrderId(Long orderId);
 }

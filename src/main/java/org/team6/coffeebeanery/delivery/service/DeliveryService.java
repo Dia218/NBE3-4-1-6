@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.team6.coffeebeanery.order.model.Order;
 import org.team6.coffeebeanery.order.repository.OrderRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -24,62 +26,82 @@ public class DeliveryService {
         return deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new IllegalArgumentException("Delivery not found with id: " + deliveryId));
     }
-    // 모든 배송 정보 조회 메서드 추가
+
+    public Delivery getDeliveryByOrderId(Long orderId) {
+        return deliveryRepository.findByOrderOrderId(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Delivery not found for order id: " + orderId));
+    }
+
     public List<Delivery> getAllDeliveries() {
         return deliveryRepository.findAll();
     }
 
-
-    public Delivery getDeliveryByOrderId(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
-        return deliveryRepository.findByOrder(order)
-                .orElseThrow(() -> new IllegalArgumentException("Delivery not found for order id: " + orderId));
-    }
-    // 배송 상태 가져오기
-    public String getDeliveryStatus(Delivery delivery) {
-        return delivery.getOrder().getOrderStatus().getStatus();
-    }
-
-    // 운송장 번호 생성 : 랜덤한 12개의 숫자 생성
     public String generateRandomTrackingNumber() {
         Random random = new Random();
         StringBuilder trackingNumber = new StringBuilder();
         for (int i = 0; i < 12; i++) {
-            trackingNumber.append(random.nextInt(10)); // 0~9 사이의 숫자 추가
+            trackingNumber.append(random.nextInt(10));
         }
         return trackingNumber.toString();
     }
 
-    // 운송 회사 생성 : 랜덤한 두 글자의 한글 + 택배를 생성하는 메서드
     public String generateCourierName() {
         Random random = new Random();
-        char firstChar = (char) (random.nextInt(11172) + 44032); // 유니코드 한글 범위: 0xAC00 ~ 0xD7A3
-        char secondChar = (char) (random.nextInt(11172) + 44032); // 두 번째 글자
-        return "" + firstChar + secondChar + "택배"; // 랜덤 두 글자 + "택배"
+        char firstChar = (char) (random.nextInt(11172) + 44032);
+        char secondChar = (char) (random.nextInt(11172) + 44032);
+        return "" + firstChar + secondChar + "택배";
     }
 
-    // 배송 정보 생성 및 저장
     public Delivery createDelivery(Order order) {
-        Delivery delivery = new Delivery();
-        delivery.setDeliveryNumber(generateRandomTrackingNumber()); // 운송장 번호 설정
-        delivery.setDeliveryCompany(generateCourierName()); // 택배사 이름 설정
-        delivery.setOrder(order); // 주문 정보 연결
+        // 이미 배송 정보가 존재하는지 확인
+        Optional<Delivery> existingDelivery = deliveryRepository.findByOrderOrderId(order.getOrderId());
+        if (existingDelivery.isPresent()) {
+            return existingDelivery.get();
+        }
+
+        Delivery delivery = Delivery.builder()
+                .deliveryNumber(generateRandomTrackingNumber())
+                .deliveryCompany(generateCourierName())
+                .order(order)
+                .build();
+
         return deliveryRepository.save(delivery);
     }
 
-    // 매일 14시에 "주문 완료" 상태를 "배송 중"으로 업데이트
-    @Scheduled(cron = "0 0 14 * * ?")
     @Transactional
-    public void updateDeliveryStatus() {
-        List<Delivery> deliveries = deliveryRepository.findAll();
-        for (Delivery delivery : deliveries) {
-            Order order = delivery.getOrder();
+    @Scheduled(cron = "0 0 14 * * *")
+    public void completeDelivery() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime yesterday = now.minusDays(1);
+        LocalDateTime twoDaysBefore = now.minusDays(2);
 
-            if (order.getOrderStatus() == OrderStatus.ORDERED) {
-                order.setOrderStatus(OrderStatus.PREPARING); // "배송 중"으로 변경
+        List<Order> orders = orderRepository.findByOrderCreatedAtBetween(
+                yesterday.withHour(14).withMinute(0).withSecond(0),
+                twoDaysBefore.withHour(14).withMinute(0).withSecond(0));
+
+        for (Order order : orders) {
+            order.setOrderStatus(OrderStatus.DELIVERED);
+        }
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 14 * * *")
+    public void createDeliveryBatch() {
+        System.out.println("run");
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime yesterday = now.minusDays(1);
+
+        List<Order> orders = orderRepository.findByOrderCreatedAtBetweenAndOrderStatus(
+                yesterday,
+                now,
+                OrderStatus.ORDERED);
+
+        for (Order order : orders) {
+            if (order.getDelivery() == null) {
+                Delivery delivery = createDelivery(order);
+                order.setDelivery(delivery);
+                order.setOrderStatus(OrderStatus.PREPARING);
             }
         }
-        deliveryRepository.saveAll(deliveries);
     }
 }
