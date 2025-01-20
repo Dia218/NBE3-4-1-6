@@ -20,13 +20,16 @@ public class DeliveryTestDataUtils {
 
         for (int i = 0; i < orders.size(); i++) {
             Order order = orders.get(i);
-            // 주문 취소 상태가 아닌 경우에만 배송 정보 생성
-            if (order.getOrderStatus() != OrderStatus.CANCELLED) {
+            // 배송 정보는 PREPARING, DELIVERED에만 있어야 정상
+            if (order.getOrderStatus() == OrderStatus.PREPARING || order.getOrderStatus() == OrderStatus.DELIVERED) {
                 Delivery delivery = new Delivery();
                 delivery.setDeliveryNumber(generateDeliveryNumber());
                 delivery.setDeliveryCompany(generateDeliveryCompany());
                 delivery.setOrder(order); // Order와 Delivery 연결
+                order.setDelivery(delivery); // Order에 Delivery 정보 기입
+
                 deliveryRepository.save(delivery);
+                orderRepository.save(order);
             }
         }
     }
