@@ -28,8 +28,10 @@ public class BuyerProductController {
     @GetMapping("/cart")
     public List<ProductDTO> getCartDetails(HttpSession session) {
         List<ProductDTO> cart = productService.getCart(session);
-        if (cart == null) {
-            cart = new ArrayList<>(); // 장바구니가 비어있을 경우 빈 리스트로 초기화
+
+        System.out.println("Session ID: " + session.getId());
+        for(int i=0; i<cart.size(); i++) {
+            System.out.println("Session ID: " + session.getId());
         }
         return cart; // 장바구니 정보 반환
     }
@@ -39,6 +41,7 @@ public class BuyerProductController {
     @ResponseStatus(HttpStatus.CREATED) // 상태 코드 201로 설정
     public void addToCart(@RequestParam("id") Long productId, @RequestParam("quantity") int quantity,
                           HttpSession session) {
+        System.out.println(productId + " " + quantity);
         productService.saveCart(productId, quantity, session);
     }
     

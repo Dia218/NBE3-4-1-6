@@ -105,43 +105,40 @@ public class BuyerProductService {
     }
     
     public List<ProductDTO> getCart(HttpSession session) {
-        Object cartObject = session.getAttribute("cart");
+        List<ProductDTO> cart = (List<ProductDTO>) session.getAttribute("cart");
         
         // cartObject가 null이면 예외 처리
-        if (cartObject == null) {
-            throw new ResourceNotFoundException("장바구니 목록을 불러오는데 실패했습니다");
+        if (cart == null) {
+            System.out.println("??");
+            cart = new ArrayList<>();
+            session.setAttribute("cart", cart);
         }
-        
-        // cartObject가 List인지를 확인
-        if (!(cartObject instanceof List<?> rawList)) {
-            throw new IllegalStateException("세션에 저장된 장바구니 데이터가 List 타입이 아닙니다");
-        }
-        
-        return convertToProductDTO(rawList);
+
+        return cart;
     }
     
     public void saveCart(Long productId, int quantity, HttpSession session) {
         List<ProductDTO> cart = getCart(session);
-        if (cart == null) {
-            cart = new ArrayList<>();
-            session.setAttribute("cart", cart);
-        }
-        
-        boolean itemExists = true;
+
+        boolean itemExists = false; // 상품 존재 여부를 false로 초기화
+
+        // 카트에서 상품 검색 및 수량 증가
         for (ProductDTO item : cart) {
-            if (item.getProductId()
-                    .equals(productId)) {
+            if (item.getProductId().equals(productId)) {
                 item.setProductStock(item.getProductStock() + quantity); // 기존 상품의 수량 증가
-                continue;
+                itemExists = true; // 상품이 이미 존재함을 표시
+                break; // 상품을 찾았으므로 루프 종료
             }
-            itemExists = false;
         }
-        
+
+        // 카트에 상품이 없을 경우 새로 추가
         if (!itemExists) {
-            ProductDTO productDTO = getProduct(productId);
-            productDTO.setProductStock(quantity);
-            cart.add(productDTO);
+            ProductDTO productDTO = getProduct(productId); // 상품 정보 가져오기
+            productDTO.setProductStock(quantity); // 요청된 수량 설정
+            cart.add(productDTO); // 카트에 추가
         }
+
+        System.out.println("Session ID: " + session.getId());
     }
     
     private List<ProductDTO> convertToProductDTO(List<?> rawList) {
