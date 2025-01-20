@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.team6.coffeebeanery.common.dto.PageDTO;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
 import org.team6.coffeebeanery.product.mapper.ProductMapper;
 import org.team6.coffeebeanery.product.model.Product;
@@ -16,9 +17,9 @@ public class SellerProductController {
     private final ProductMapper productMapper;
     
     @GetMapping({"/seller/products"}) //판매자용) 상품 목록 페이지
-    public Page<ProductDTO> getAllProductList(@RequestParam(value = "page", defaultValue = "0") int page) {
+    public PageDTO<ProductDTO> getAllProductList(@RequestParam(value = "page", defaultValue = "0") int page) {
         Page<Product> products = sellerProductService.getAllProductList(page);
-        return products.map(productMapper::toDTO);
+        return new PageDTO<>(products.map(productMapper::toDTO));
     }
     
     @PostMapping("/seller/products") //판매자용) 새 상품 생성
