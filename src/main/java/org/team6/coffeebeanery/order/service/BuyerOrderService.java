@@ -1,23 +1,22 @@
 package org.team6.coffeebeanery.order.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.team6.coffeebeanery.common.constant.OrderStatus;
 import org.team6.coffeebeanery.common.exception.InvalidInputException;
 import org.team6.coffeebeanery.common.exception.ResourceNotFoundException;
 import org.team6.coffeebeanery.common.model.Address;
-import org.team6.coffeebeanery.delivery.model.Delivery;
 import org.team6.coffeebeanery.order.converter.OrderConverter;
 import org.team6.coffeebeanery.order.dto.OrderCreateReqBody;
 import org.team6.coffeebeanery.order.dto.OrderDTO;
 import org.team6.coffeebeanery.order.model.Order;
 import org.team6.coffeebeanery.order.repository.OrderDetailRepository;
 import org.team6.coffeebeanery.order.repository.OrderRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
 import org.team6.coffeebeanery.product.model.Product;
 import org.team6.coffeebeanery.product.service.SellerProductService;
@@ -78,6 +77,7 @@ public class BuyerOrderService {
         }
     }
 
+    // 주문 취소
     @Transactional
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
@@ -85,12 +85,6 @@ public class BuyerOrderService {
                         "order not found - id: " + orderId));
 
         if(order.getOrderStatus().equals(OrderStatus.ORDERED)) {
-            // 주문에 배송 정보가 있다면 연관관계 제거
-            if (order.getDelivery() != null) {
-                Delivery delivery = order.getDelivery();
-                delivery.setOrder(null);
-                order.setDelivery(null);
-            }
             order.setOrderStatus(OrderStatus.CANCELLED);
         } else {
             throw new InvalidInputException("주문 취소는 배송 전에만 가능합니다.");
