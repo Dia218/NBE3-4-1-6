@@ -26,7 +26,10 @@ public class DeliveryTestDataUtils {
                 delivery.setDeliveryNumber(generateDeliveryNumber());
                 delivery.setDeliveryCompany(generateDeliveryCompany());
                 delivery.setOrder(order); // Order와 Delivery 연결
+                order.setDelivery(delivery); // Order에 Delivery 정보 기입
+
                 deliveryRepository.save(delivery);
+                orderRepository.save(order);
             }
         }
     }

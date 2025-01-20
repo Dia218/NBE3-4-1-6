@@ -6,6 +6,7 @@ import org.team6.coffeebeanery.common.constant.OrderStatus;
 import org.team6.coffeebeanery.common.exception.InvalidInputException;
 import org.team6.coffeebeanery.common.exception.ResourceNotFoundException;
 import org.team6.coffeebeanery.common.model.Address;
+import org.team6.coffeebeanery.delivery.model.Delivery;
 import org.team6.coffeebeanery.order.converter.OrderConverter;
 import org.team6.coffeebeanery.order.dto.OrderCreateReqBody;
 import org.team6.coffeebeanery.order.dto.OrderDTO;
@@ -84,6 +85,12 @@ public class BuyerOrderService {
                         "order not found - id: " + orderId));
 
         if(order.getOrderStatus().equals(OrderStatus.ORDERED)) {
+            // 주문에 배송 정보가 있다면 연관관계 제거
+            if (order.getDelivery() != null) {
+                Delivery delivery = order.getDelivery();
+                delivery.setOrder(null);
+                order.setDelivery(null);
+            }
             order.setOrderStatus(OrderStatus.CANCELLED);
         } else {
             throw new InvalidInputException("주문 취소는 배송 전에만 가능합니다.");
