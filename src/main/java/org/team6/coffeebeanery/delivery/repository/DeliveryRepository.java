@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
     Optional<Delivery> findByOrder(Order order);
-    boolean existsByOrder(Order order);s
+    boolean existsByOrder(Order order);
 }
