@@ -3,12 +3,13 @@ package org.team6.coffeebeanery.order.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.team6.coffeebeanery.common.constant.OrderStatus;
+import org.team6.coffeebeanery.common.exception.InvalidInputException;
+import org.team6.coffeebeanery.common.exception.ResourceNotFoundException;
 import org.team6.coffeebeanery.common.model.Address;
 import org.team6.coffeebeanery.order.converter.OrderConverter;
 import org.team6.coffeebeanery.order.dto.OrderCreateReqBody;
 import org.team6.coffeebeanery.order.dto.OrderDTO;
 import org.team6.coffeebeanery.order.model.Order;
-import org.team6.coffeebeanery.order.model.OrderDetail;
 import org.team6.coffeebeanery.order.repository.OrderDetailRepository;
 import org.team6.coffeebeanery.order.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
 import org.team6.coffeebeanery.product.model.Product;
-import org.team6.coffeebeanery.product.service.BuyerProductService;
 import org.team6.coffeebeanery.product.service.SellerProductService;
 
 import java.util.ArrayList;
@@ -77,4 +77,16 @@ public class BuyerOrderService {
         }
     }
 
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "order not found - id: " + orderId));
+
+        if(order.getOrderStatus().equals(OrderStatus.ORDERED)) {
+            order.setOrderStatus(OrderStatus.CANCELLED);
+        } else {
+            throw new InvalidInputException("주문 취소는 배송 전에만 가능합니다.");
+        }
+    }
 }

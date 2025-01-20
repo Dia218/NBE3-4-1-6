@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +31,7 @@ public class BuyerOrderController {
             throw new IllegalArgumentException("주문 내역이 존재하지 않는 이메일입니다.");
         }
 
-        return ResponseEntity
-                .status(HttpStatus.FOUND)  // 302 상태 코드 (리다이렉트)
-                .header(HttpHeaders.LOCATION, "/order/list")  // 리다이렉트할 URL
-                .build();
+        return ResponseEntity.ok().build();
     }
 
     // 주문 목록 조회 by 이메일
@@ -65,5 +61,12 @@ public class BuyerOrderController {
         } catch(IllegalStateException e) {
             throw new IllegalStateException("주문 가능한 재고를 초과했습니다.");
         }
+    }
+
+    // 주문 취소
+    @PatchMapping("/list")
+    public ResponseEntity<Void> cancelOrder(@RequestParam Long orderId) {
+        orderService.cancelOrder(orderId);
+        return ResponseEntity.ok().build();
     }
 }

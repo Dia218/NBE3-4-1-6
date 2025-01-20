@@ -17,7 +17,7 @@ public class SellerOrderController {
     
     @GetMapping("/admin/orders")
     public PageDTO<OrderDTO> getOrders(@RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "10") int size,
+                                       @RequestParam(defaultValue = "5") int size,
                                        @RequestParam(required = false) String email) {
         Page<OrderDTO> orderPage;
         if (email != null) {
