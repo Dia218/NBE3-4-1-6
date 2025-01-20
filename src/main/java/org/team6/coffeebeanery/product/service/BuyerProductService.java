@@ -109,7 +109,6 @@ public class BuyerProductService {
         
         // cartObject가 null이면 예외 처리
         if (cart == null) {
-            System.out.println("??");
             cart = new ArrayList<>();
             session.setAttribute("cart", cart);
         }
@@ -138,7 +137,6 @@ public class BuyerProductService {
             cart.add(productDTO); // 카트에 추가
         }
 
-        System.out.println("Session ID: " + session.getId());
     }
     
     private List<ProductDTO> convertToProductDTO(List<?> rawList) {

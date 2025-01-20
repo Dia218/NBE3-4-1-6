@@ -15,6 +15,7 @@ import org.team6.coffeebeanery.order.dto.OrderDTO;
 import org.team6.coffeebeanery.order.service.BuyerOrderService;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -61,6 +62,10 @@ public class BuyerOrderController {
         } catch(IllegalStateException e) {
             throw new IllegalStateException("주문 가능한 재고를 초과했습니다.");
         }
+
+        // 장바구니 비우기
+        cart = new ArrayList<>();
+        session.setAttribute("cart", cart);
     }
 
     // 주문 취소
