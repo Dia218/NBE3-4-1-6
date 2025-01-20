@@ -29,22 +29,17 @@ public class DeliveryController {
     @GetMapping("/{deliveryId}")
     public ResponseEntity<DeliveryDTO> getDeliveryById(@PathVariable Long deliveryId) {
         Delivery delivery = deliveryService.getDeliveryById(deliveryId);
-        DeliveryDTO deliveryDTO = DeliveryMapper.INSTANCE.toDTO(delivery);
-        return ResponseEntity.ok(deliveryDTO);
+        return ResponseEntity.ok(DeliveryMapper.INSTANCE.toDTO(delivery));
     }
 
     @GetMapping("/order/{orderId}")
     public ResponseEntity<DeliveryDTO> getDeliveryByOrderId(@PathVariable Long orderId) {
         try {
-            System.out.println("Received request for orderId: " + orderId);
             Delivery delivery = deliveryService.getDeliveryByOrderId(orderId);
-            DeliveryDTO deliveryDTO = DeliveryMapper.INSTANCE.toDTO(delivery);
-            return ResponseEntity.ok(deliveryDTO);
+            return ResponseEntity.ok(DeliveryMapper.INSTANCE.toDTO(delivery));
         } catch (Exception e) {
             System.err.println("Error processing request: " + e.getMessage());
             throw e;
         }
     }
-
-
 }

@@ -1,15 +1,27 @@
 package org.team6.coffeebeanery.delivery.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.team6.coffeebeanery.common.constant.OrderStatus;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor  // 추가
+@AllArgsConstructor // 추가
 public class DeliveryDTO {
-    private Long deliveryId; // 배송 ID
-    private String deliveryNumber; // 운송장 번호
-    private String deliveryCompany; // 택배사
-    private Long orderId; // 주문 ID (추가)
+    private Long deliveryId;
+    private String deliveryNumber;
+    private String deliveryCompany;
+    private Long orderId;
+    private SimpleOrderInfo order;
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor  // 추가
+    @AllArgsConstructor // 추가
+    public static class SimpleOrderInfo {
+        private Long orderId;
+        private OrderStatus orderStatus;
+    }
 }
