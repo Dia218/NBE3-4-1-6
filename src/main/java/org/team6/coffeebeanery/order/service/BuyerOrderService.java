@@ -1,11 +1,6 @@
 package org.team6.coffeebeanery.order.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.team6.coffeebeanery.common.constant.OrderStatus;
 import org.team6.coffeebeanery.common.exception.InvalidInputException;
@@ -17,6 +12,11 @@ import org.team6.coffeebeanery.order.dto.OrderDTO;
 import org.team6.coffeebeanery.order.model.Order;
 import org.team6.coffeebeanery.order.repository.OrderDetailRepository;
 import org.team6.coffeebeanery.order.repository.OrderRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.team6.coffeebeanery.product.dto.ProductDTO;
 import org.team6.coffeebeanery.product.model.Product;
 import org.team6.coffeebeanery.product.service.SellerProductService;
@@ -77,7 +77,6 @@ public class BuyerOrderService {
         }
     }
 
-    // 주문 취소
     @Transactional
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
