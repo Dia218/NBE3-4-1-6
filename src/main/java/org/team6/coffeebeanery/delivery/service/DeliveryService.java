@@ -46,10 +46,19 @@ public class DeliveryService {
     }
 
     public String generateCourierName() {
+        // 배송 업체 목록
+        String[] courierNames = {
+                "우체국택배",
+                "롯데택배",
+                "로젠택배",
+                "한진택배",
+                "CJ대한통운 택배"
+        };
+
+        // 랜덤으로 하나 선택
         Random random = new Random();
-        char firstChar = (char) (random.nextInt(11172) + 44032);
-        char secondChar = (char) (random.nextInt(11172) + 44032);
-        return "" + firstChar + secondChar + "택배";
+        int index = random.nextInt(courierNames.length);
+        return courierNames[index];
     }
 
     public Delivery createDelivery(Order order) {
